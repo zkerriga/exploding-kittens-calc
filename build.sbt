@@ -13,7 +13,10 @@ lazy val root = project
       "org.http4s" %% "http4s-ember-server" % http4sVersion,
       "org.http4s" %% "http4s-circe" % http4sVersion,
       "org.http4s" %% "http4s-dsl" % http4sVersion,
+      "org.latestbit" %% "circe-tagged-adt-codec" % "0.11.0",
       "org.typelevel" %% "cats-effect" % "3.5.4",
       "ch.qos.logback" % "logback-classic" % "1.5.6" % Runtime,
+      "org.scalatest" %% "scalatest" % "3.2.18" % Test,
+      "io.circe" %% "circe-literal" % "0.14.7" % Test,
     ),
   )

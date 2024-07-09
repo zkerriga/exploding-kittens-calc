@@ -1,23 +1,37 @@
 package ex.kittens.domain.deck
 
+import io.circe.syntax.*
+import io.circe.{Decoder, Encoder}
+import org.latestbit.circe.adt.codec.*
+
 sealed trait Card
 
 object Card:
-  case object ExplodingKitten extends Card
+  enum Active extends Card derives JsonTaggedAdt.PureCodec:
+    case Defuse, ExplodingKitten
 
-  case object Defuse extends Card
+  enum Base extends Card derives JsonTaggedAdt.PureCodec:
+    case Skip
+    case Nope
+    case TacoCat
+    case Shuffle
+    case Attack
+    case SeeTheFuture
+    case Favor
+    case BeardCat
+    case HairyPotatoCat
+    case Cattermelon
+    case RainbowRalphingCat
+
+  export Base.*
+  export Active.*
+
   type Defuse = Defuse.type
+  type Kitten = ExplodingKitten.type
 
-  sealed trait Base extends Card
+  given Encoder[Card] = Encoder.instance:
+    case base: Base     => base.asJson
+    case active: Active => active.asJson
 
-  case object Skip extends Card with Base
-  case object Nope extends Card with Base
-  case object TacoCat extends Card with Base
-  case object Shuffle extends Card with Base
-  case object Attack extends Card with Base
-  case object SeeTheFuture extends Card with Base
-  case object Favor extends Card with Base
-  case object BeardCat extends Card with Base
-  case object HairyPotatoCat extends Card with Base
-  case object Cattermelon extends Card with Base
-  case object RainbowRalphingCat extends Card with Base
+  given Decoder[Card] = Decoder.instance: c =>
+    c.as[Base] orElse c.as[Active]
